@@ -1,0 +1,17 @@
+<ul>
+    <li *ngFor="let info of execSteps">
+        <div>{{info.Name}}</div>
+        <div>Type : {{info.TypeName}}</div>
+        <ul>
+                <li *ngFor="let status of info.StatusInfo">
+                    <div>
+                       <span> {{status.IterationsNumber}} </span>
+                       <span> {{status.StartAt}} </span>
+                       <span> {{status.EndAt}} </span>
+                       <span> {{status.StatusID}} </span>
+                    </div>
+                   
+                </li>
+            </ul>
+    </li>
+</ul>

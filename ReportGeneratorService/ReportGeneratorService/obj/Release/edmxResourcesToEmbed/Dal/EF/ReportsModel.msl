@@ -1,0 +1,76 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="ReportsDBModelStoreContainer" CdmEntityContainer="ReportsDBEntities">
+    <EntitySetMapping Name="ExecutedMissions">
+      <EntityTypeMapping TypeName="ReportsDBModel.ExecutedMission">
+        <MappingFragment StoreEntitySet="ExecutedMissions">
+          <ScalarProperty Name="ID" ColumnName="ID" />
+          <ScalarProperty Name="MissionTemplateID" ColumnName="MissionTemplateID" />
+          <ScalarProperty Name="StartedAt" ColumnName="StartedAt" />
+          <ScalarProperty Name="EndedAt" ColumnName="EndedAt" />
+          <ScalarProperty Name="ExecutedBy" ColumnName="ExecutedBy" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="ExecutedSteps">
+      <EntityTypeMapping TypeName="ReportsDBModel.ExecutedStep">
+        <MappingFragment StoreEntitySet="ExecutedSteps">
+          <ScalarProperty Name="ID" ColumnName="ID" />
+          <ScalarProperty Name="ExecutedMissionID" ColumnName="ExecutedMissionID" />
+          <ScalarProperty Name="StepID" ColumnName="StepID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="ExecutedStepStatuses">
+      <EntityTypeMapping TypeName="ReportsDBModel.ExecutedStepStatus">
+        <MappingFragment StoreEntitySet="ExecutedStepStatuses">
+          <ScalarProperty Name="ID" ColumnName="ID" />
+          <ScalarProperty Name="ExecutedStepID" ColumnName="ExecutedStepID" />
+          <ScalarProperty Name="IterationNumber" ColumnName="IterationNumber" />
+          <ScalarProperty Name="SourcesStepsIDs" ColumnName="SourcesStepsIDs" />
+          <ScalarProperty Name="StatusID" ColumnName="StatusID" />
+          <ScalarProperty Name="StartedAt" ColumnName="StartedAt" />
+          <ScalarProperty Name="EndedAt" ColumnName="EndedAt" />
+          <ScalarProperty Name="Message" ColumnName="Message" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="MissionPlans">
+      <EntityTypeMapping TypeName="ReportsDBModel.MissionPlan">
+        <MappingFragment StoreEntitySet="MissionPlans">
+          <ScalarProperty Name="ID" ColumnName="ID" />
+          <ScalarProperty Name="Title" ColumnName="Title" />
+          <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
+          <ScalarProperty Name="CreateBy" ColumnName="CreateBy" />
+          <ScalarProperty Name="IsSubMission" ColumnName="IsSubMission" />
+          <ScalarProperty Name="InstrumentTypeID" ColumnName="InstrumentTypeID" />
+          <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Steps">
+      <EntityTypeMapping TypeName="ReportsDBModel.Step">
+        <MappingFragment StoreEntitySet="Steps">
+          <ScalarProperty Name="ID" ColumnName="ID" />
+          <ScalarProperty Name="MissionPlanID" ColumnName="MissionPlanID" />
+          <ScalarProperty Name="StepTypeID" ColumnName="StepTypeID" />
+          <ScalarProperty Name="Title" ColumnName="Title" />
+          <ScalarProperty Name="IsOpperator" ColumnName="IsOpperator" />
+          <ScalarProperty Name="StepProperties" ColumnName="StepProperties" />
+          <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
+          <ScalarProperty Name="StepErrorTreatmentTypeID" ColumnName="StepErrorTreatmentTypeID" />
+          <ScalarProperty Name="StepErrorTreatmentRetryCount" ColumnName="StepErrorTreatmentRetryCount" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="StepTypes">
+      <EntityTypeMapping TypeName="ReportsDBModel.StepType">
+        <MappingFragment StoreEntitySet="StepTypes">
+          <ScalarProperty Name="ID" ColumnName="ID" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="DisplayedName" ColumnName="DisplayedName" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+  </EntityContainerMapping>
+</Mapping>

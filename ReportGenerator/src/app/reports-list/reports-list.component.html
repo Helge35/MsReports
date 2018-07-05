@@ -1,0 +1,8 @@
+<ul>
+  <li *ngFor="let info of reportsList" (click)="getSelectedReport(info.ID)">
+      <div>{{info.Name}}</div>
+  </li>
+</ul>
+<div>
+  <button (click)="testServer()">Status</button>{{serverStatus}}
+</div>

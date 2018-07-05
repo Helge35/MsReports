@@ -1,0 +1,433 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="ReportsDBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="ExecutedMissions">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="MissionTemplateID" Type="int" />
+          <Property Name="StartedAt" Type="datetime" />
+          <Property Name="EndedAt" Type="datetime" />
+          <Property Name="ExecutedBy" Type="int" />
+        </EntityType>
+        <EntityType Name="ExecutedSteps">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ExecutedMissionID" Type="int" />
+          <Property Name="StepID" Type="int" />
+        </EntityType>
+        <EntityType Name="ExecutedStepStatuses">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ExecutedStepID" Type="int" />
+          <Property Name="IterationNumber" Type="int" />
+          <Property Name="SourcesStepsIDs" Type="nvarchar" MaxLength="50" />
+          <Property Name="StatusID" Type="int" />
+          <Property Name="StartedAt" Type="datetime" />
+          <Property Name="EndedAt" Type="datetime" />
+          <Property Name="Message" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityType Name="MissionPlans">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Title" Type="nvarchar" MaxLength="100" />
+          <Property Name="CreateDate" Type="datetime" />
+          <Property Name="CreateBy" Type="int" />
+          <Property Name="IsSubMission" Type="bit" />
+          <Property Name="InstrumentTypeID" Type="int" />
+          <Property Name="IsDeleted" Type="bit" />
+        </EntityType>
+        <EntityType Name="Steps">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="MissionPlanID" Type="int" />
+          <Property Name="StepTypeID" Type="int" />
+          <Property Name="Title" Type="nvarchar" MaxLength="100" />
+          <Property Name="IsOpperator" Type="bit" />
+          <Property Name="StepProperties" Type="nvarchar(max)" />
+          <Property Name="IsDeleted" Type="bit" />
+          <Property Name="StepErrorTreatmentTypeID" Type="int" />
+          <Property Name="StepErrorTreatmentRetryCount" Type="int" />
+        </EntityType>
+        <EntityType Name="StepTypes">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="200" />
+          <Property Name="DisplayedName" Type="nvarchar" MaxLength="200" />
+        </EntityType>
+        <Association Name="FK_ExecutedMissions_MissionPlans">
+          <End Role="MissionPlans" Type="Self.MissionPlans" Multiplicity="0..1" />
+          <End Role="ExecutedMissions" Type="Self.ExecutedMissions" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MissionPlans">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="ExecutedMissions">
+              <PropertyRef Name="MissionTemplateID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ExecutedStep_Steps">
+          <End Role="Steps" Type="Self.Steps" Multiplicity="0..1" />
+          <End Role="ExecutedSteps" Type="Self.ExecutedSteps" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Steps">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="ExecutedSteps">
+              <PropertyRef Name="StepID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ExecutedStepStatuses_ExecutedSteps">
+          <End Role="ExecutedSteps" Type="Self.ExecutedSteps" Multiplicity="0..1" />
+          <End Role="ExecutedStepStatuses" Type="Self.ExecutedStepStatuses" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ExecutedSteps">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="ExecutedStepStatuses">
+              <PropertyRef Name="ExecutedStepID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Steps_MissionPlans">
+          <End Role="MissionPlans" Type="Self.MissionPlans" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Steps" Type="Self.Steps" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MissionPlans">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Steps">
+              <PropertyRef Name="MissionPlanID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Steps_StepTypes">
+          <End Role="StepTypes" Type="Self.StepTypes" Multiplicity="0..1" />
+          <End Role="Steps" Type="Self.Steps" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="StepTypes">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Steps">
+              <PropertyRef Name="StepTypeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="ReportsDBModelStoreContainer">
+          <EntitySet Name="ExecutedMissions" EntityType="Self.ExecutedMissions" Schema="eng" store:Type="Tables" />
+          <EntitySet Name="ExecutedSteps" EntityType="Self.ExecutedSteps" Schema="eng" store:Type="Tables" />
+          <EntitySet Name="ExecutedStepStatuses" EntityType="Self.ExecutedStepStatuses" Schema="eng" store:Type="Tables" />
+          <EntitySet Name="MissionPlans" EntityType="Self.MissionPlans" Schema="eng" store:Type="Tables" />
+          <EntitySet Name="Steps" EntityType="Self.Steps" Schema="eng" store:Type="Tables" />
+          <EntitySet Name="StepTypes" EntityType="Self.StepTypes" Schema="eng" store:Type="Tables" />
+          <AssociationSet Name="FK_ExecutedMissions_MissionPlans" Association="Self.FK_ExecutedMissions_MissionPlans">
+            <End Role="MissionPlans" EntitySet="MissionPlans" />
+            <End Role="ExecutedMissions" EntitySet="ExecutedMissions" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ExecutedStep_Steps" Association="Self.FK_ExecutedStep_Steps">
+            <End Role="Steps" EntitySet="Steps" />
+            <End Role="ExecutedSteps" EntitySet="ExecutedSteps" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ExecutedStepStatuses_ExecutedSteps" Association="Self.FK_ExecutedStepStatuses_ExecutedSteps">
+            <End Role="ExecutedSteps" EntitySet="ExecutedSteps" />
+            <End Role="ExecutedStepStatuses" EntitySet="ExecutedStepStatuses" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Steps_MissionPlans" Association="Self.FK_Steps_MissionPlans">
+            <End Role="MissionPlans" EntitySet="MissionPlans" />
+            <End Role="Steps" EntitySet="Steps" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Steps_StepTypes" Association="Self.FK_Steps_StepTypes">
+            <End Role="StepTypes" EntitySet="StepTypes" />
+            <End Role="Steps" EntitySet="Steps" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="ReportsDBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="ExecutedMission">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="MissionTemplateID" Type="Int32" />
+          <Property Name="StartedAt" Type="DateTime" Precision="3" />
+          <Property Name="EndedAt" Type="DateTime" Precision="3" />
+          <Property Name="ExecutedBy" Type="Int32" />
+          <NavigationProperty Name="MissionPlan" Relationship="Self.FK_ExecutedMissions_MissionPlans" FromRole="ExecutedMissions" ToRole="MissionPlans" />
+        </EntityType>
+        <EntityType Name="ExecutedStep">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ExecutedMissionID" Type="Int32" />
+          <Property Name="StepID" Type="Int32" />
+          <NavigationProperty Name="Step" Relationship="Self.FK_ExecutedStep_Steps" FromRole="ExecutedSteps" ToRole="Steps" />
+          <NavigationProperty Name="ExecutedStepStatuses" Relationship="Self.FK_ExecutedStepStatuses_ExecutedSteps" FromRole="ExecutedSteps" ToRole="ExecutedStepStatuses" />
+        </EntityType>
+        <EntityType Name="ExecutedStepStatus">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ExecutedStepID" Type="Int32" />
+          <Property Name="IterationNumber" Type="Int32" />
+          <Property Name="SourcesStepsIDs" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="StatusID" Type="Int32" />
+          <Property Name="StartedAt" Type="DateTime" Precision="3" />
+          <Property Name="EndedAt" Type="DateTime" Precision="3" />
+          <Property Name="Message" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="ExecutedStep" Relationship="Self.FK_ExecutedStepStatuses_ExecutedSteps" FromRole="ExecutedStepStatuses" ToRole="ExecutedSteps" />
+        </EntityType>
+        <EntityType Name="MissionPlan">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Title" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="CreateDate" Type="DateTime" Precision="3" />
+          <Property Name="CreateBy" Type="Int32" />
+          <Property Name="IsSubMission" Type="Boolean" />
+          <Property Name="InstrumentTypeID" Type="Int32" />
+          <Property Name="IsDeleted" Type="Boolean" />
+          <NavigationProperty Name="ExecutedMissions" Relationship="Self.FK_ExecutedMissions_MissionPlans" FromRole="MissionPlans" ToRole="ExecutedMissions" />
+          <NavigationProperty Name="Steps" Relationship="Self.FK_Steps_MissionPlans" FromRole="MissionPlans" ToRole="Steps" />
+        </EntityType>
+        <EntityType Name="Step">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="MissionPlanID" Type="Int32" />
+          <Property Name="StepTypeID" Type="Int32" />
+          <Property Name="Title" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="IsOpperator" Type="Boolean" />
+          <Property Name="StepProperties" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="IsDeleted" Type="Boolean" />
+          <Property Name="StepErrorTreatmentTypeID" Type="Int32" />
+          <Property Name="StepErrorTreatmentRetryCount" Type="Int32" />
+          <NavigationProperty Name="ExecutedSteps" Relationship="Self.FK_ExecutedStep_Steps" FromRole="Steps" ToRole="ExecutedSteps" />
+          <NavigationProperty Name="MissionPlan" Relationship="Self.FK_Steps_MissionPlans" FromRole="Steps" ToRole="MissionPlans" />
+          <NavigationProperty Name="StepType" Relationship="Self.FK_Steps_StepTypes" FromRole="Steps" ToRole="StepTypes" />
+        </EntityType>
+        <EntityType Name="StepType">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="DisplayedName" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Steps" Relationship="Self.FK_Steps_StepTypes" FromRole="StepTypes" ToRole="Steps" />
+        </EntityType>
+        <Association Name="FK_ExecutedMissions_MissionPlans">
+          <End Role="MissionPlans" Type="Self.MissionPlan" Multiplicity="0..1" />
+          <End Role="ExecutedMissions" Type="Self.ExecutedMission" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MissionPlans">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="ExecutedMissions">
+              <PropertyRef Name="MissionTemplateID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ExecutedStep_Steps">
+          <End Role="Steps" Type="Self.Step" Multiplicity="0..1" />
+          <End Role="ExecutedSteps" Type="Self.ExecutedStep" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Steps">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="ExecutedSteps">
+              <PropertyRef Name="StepID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ExecutedStepStatuses_ExecutedSteps">
+          <End Role="ExecutedSteps" Type="Self.ExecutedStep" Multiplicity="0..1" />
+          <End Role="ExecutedStepStatuses" Type="Self.ExecutedStepStatus" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ExecutedSteps">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="ExecutedStepStatuses">
+              <PropertyRef Name="ExecutedStepID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Steps_MissionPlans">
+          <End Role="MissionPlans" Type="Self.MissionPlan" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Steps" Type="Self.Step" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MissionPlans">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Steps">
+              <PropertyRef Name="MissionPlanID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Steps_StepTypes">
+          <End Role="StepTypes" Type="Self.StepType" Multiplicity="0..1" />
+          <End Role="Steps" Type="Self.Step" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="StepTypes">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Steps">
+              <PropertyRef Name="StepTypeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="ReportsDBEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="ExecutedMissions" EntityType="Self.ExecutedMission" />
+          <EntitySet Name="ExecutedSteps" EntityType="Self.ExecutedStep" />
+          <EntitySet Name="ExecutedStepStatuses" EntityType="Self.ExecutedStepStatus" />
+          <EntitySet Name="MissionPlans" EntityType="Self.MissionPlan" />
+          <EntitySet Name="Steps" EntityType="Self.Step" />
+          <EntitySet Name="StepTypes" EntityType="Self.StepType" />
+          <AssociationSet Name="FK_ExecutedMissions_MissionPlans" Association="Self.FK_ExecutedMissions_MissionPlans">
+            <End Role="MissionPlans" EntitySet="MissionPlans" />
+            <End Role="ExecutedMissions" EntitySet="ExecutedMissions" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ExecutedStep_Steps" Association="Self.FK_ExecutedStep_Steps">
+            <End Role="Steps" EntitySet="Steps" />
+            <End Role="ExecutedSteps" EntitySet="ExecutedSteps" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ExecutedStepStatuses_ExecutedSteps" Association="Self.FK_ExecutedStepStatuses_ExecutedSteps">
+            <End Role="ExecutedSteps" EntitySet="ExecutedSteps" />
+            <End Role="ExecutedStepStatuses" EntitySet="ExecutedStepStatuses" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Steps_MissionPlans" Association="Self.FK_Steps_MissionPlans">
+            <End Role="MissionPlans" EntitySet="MissionPlans" />
+            <End Role="Steps" EntitySet="Steps" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Steps_StepTypes" Association="Self.FK_Steps_StepTypes">
+            <End Role="StepTypes" EntitySet="StepTypes" />
+            <End Role="Steps" EntitySet="Steps" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="ReportsDBModelStoreContainer" CdmEntityContainer="ReportsDBEntities">
+          <EntitySetMapping Name="ExecutedMissions">
+            <EntityTypeMapping TypeName="ReportsDBModel.ExecutedMission">
+              <MappingFragment StoreEntitySet="ExecutedMissions">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="MissionTemplateID" ColumnName="MissionTemplateID" />
+                <ScalarProperty Name="StartedAt" ColumnName="StartedAt" />
+                <ScalarProperty Name="EndedAt" ColumnName="EndedAt" />
+                <ScalarProperty Name="ExecutedBy" ColumnName="ExecutedBy" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ExecutedSteps">
+            <EntityTypeMapping TypeName="ReportsDBModel.ExecutedStep">
+              <MappingFragment StoreEntitySet="ExecutedSteps">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="ExecutedMissionID" ColumnName="ExecutedMissionID" />
+                <ScalarProperty Name="StepID" ColumnName="StepID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ExecutedStepStatuses">
+            <EntityTypeMapping TypeName="ReportsDBModel.ExecutedStepStatus">
+              <MappingFragment StoreEntitySet="ExecutedStepStatuses">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="ExecutedStepID" ColumnName="ExecutedStepID" />
+                <ScalarProperty Name="IterationNumber" ColumnName="IterationNumber" />
+                <ScalarProperty Name="SourcesStepsIDs" ColumnName="SourcesStepsIDs" />
+                <ScalarProperty Name="StatusID" ColumnName="StatusID" />
+                <ScalarProperty Name="StartedAt" ColumnName="StartedAt" />
+                <ScalarProperty Name="EndedAt" ColumnName="EndedAt" />
+                <ScalarProperty Name="Message" ColumnName="Message" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="MissionPlans">
+            <EntityTypeMapping TypeName="ReportsDBModel.MissionPlan">
+              <MappingFragment StoreEntitySet="MissionPlans">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Title" ColumnName="Title" />
+                <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
+                <ScalarProperty Name="CreateBy" ColumnName="CreateBy" />
+                <ScalarProperty Name="IsSubMission" ColumnName="IsSubMission" />
+                <ScalarProperty Name="InstrumentTypeID" ColumnName="InstrumentTypeID" />
+                <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Steps">
+            <EntityTypeMapping TypeName="ReportsDBModel.Step">
+              <MappingFragment StoreEntitySet="Steps">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="MissionPlanID" ColumnName="MissionPlanID" />
+                <ScalarProperty Name="StepTypeID" ColumnName="StepTypeID" />
+                <ScalarProperty Name="Title" ColumnName="Title" />
+                <ScalarProperty Name="IsOpperator" ColumnName="IsOpperator" />
+                <ScalarProperty Name="StepProperties" ColumnName="StepProperties" />
+                <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
+                <ScalarProperty Name="StepErrorTreatmentTypeID" ColumnName="StepErrorTreatmentTypeID" />
+                <ScalarProperty Name="StepErrorTreatmentRetryCount" ColumnName="StepErrorTreatmentRetryCount" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="StepTypes">
+            <EntityTypeMapping TypeName="ReportsDBModel.StepType">
+              <MappingFragment StoreEntitySet="StepTypes">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="DisplayedName" ColumnName="DisplayedName" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="true" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
